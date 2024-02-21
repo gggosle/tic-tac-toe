@@ -10,6 +10,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
+            margin-top: 15px;
         }
         .board {
             display: grid;
@@ -26,6 +27,9 @@
             text-align: center;
             font-size: 2vw;
         }
+        .modal {
+            display: none;
+        }
     </style>
 </head>
 <body>
@@ -38,7 +42,15 @@
     <div class="board"></div>
 </div>
 
-
+<div class="modal">
+    <div class="modal-content">
+        <p>Game options: </p>
+        <div class="button-container">
+            <button onclick="resetGame()" id="resetBtn">Reset</button>
+            <button onclick="continueGame()" id="continueBtn">Continue</button>
+        </div>
+    </div>
+</div>
 
 
 

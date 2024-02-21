@@ -19,12 +19,14 @@ class CellDir {
 }
 
 const board = document.querySelector('.board');
+const modal = document.querySelector('.modal');
+
 
 const info__turn = document.querySelector('.info__turn');
 const info__score = document.querySelector('.info__score');
 const playerX = new Player('X');
 const playerO = new Player('O');
-const defaultBoardWinValue = "3";
+const minBoardWinValue = "3";
 const cellsKey = 'cells';
 const occurrencesNumKey = 'occurrencesNum';
 const boardSizeKey = 'boardSize';
@@ -140,8 +142,8 @@ function resetGame() {
 }
 
 function startAnew() {
-    setBoardSize();
-    setOccurrencesNum();
+    setPropertyInTheRange(promptBoardSize, 100);
+    setPropertyInTheRange(promptOccurrenceNum, boardSize);
     currentPlayer = playerO;
 }
 
@@ -163,26 +165,29 @@ function updateSize() {
     })
 }
 
-function setBoardSize() {
+function setPropertyInTheRange(getProp, maxValue) {
     let invalid = true;
 
-    while (invalid) {
-        boardSize = Number(prompt("Game board size, please: ", defaultBoardWinValue));
-        if (boardSize >= 3 && boardSize <= 100) {
+
+    for (let i = 0; i < 5; i++) {
+        const prop = getProp();
+        if (prop >= minBoardWinValue && prop <= maxValue) {
             invalid = false;
+            return;
         }
     }
+
+    occurrencesNum = minBoardWinValue;
 }
 
-function setOccurrencesNum() {
-    let invalid = true;
+function promptBoardSize() {
+    boardSize = Number(prompt("Game board size, please: ", minBoardWinValue));
+    return boardSize;
+}
 
-    while (invalid) {
-        occurrencesNum = Number(prompt("How many cells to win?", defaultBoardWinValue));
-        if (occurrencesNum >= 3 && occurrencesNum <= boardSize) {
-            invalid = false;
-        }
-    }
+function promptOccurrenceNum() {
+    occurrencesNum = Number(prompt("How many cells to win?", minBoardWinValue));
+    return occurrencesNum;
 }
 
 function calculateCellSize(boardSize) {
@@ -241,7 +246,7 @@ function isWinner(player) {
 }
 
 function checkInTheDirectionOf(template, cell, count) {
-    //TODO can make it shorter with for loop in a place of recursion; :(
+    //TODO can make it faster with for loop in a place of recursion;
     const newRowIndex = cell.r + template[0];
     const newColumnIndex = cell.c + template[1];
     const cellExists = !!(cells[newRowIndex] && cells[newRowIndex][newColumnIndex]);
@@ -312,6 +317,16 @@ function getCellsContent() {
     return cellsContent;
 }
 
-window.addEventListener("beforeunload", saveGame);
+function openModal() {
+    modal.style.display = 'flex';
+}
+
+function closeModal() {
+    modal.style.display = 'none';
+}
+
+
+//fixme alert massages are messy and stop the program's runtime, do modal windows instead
+//window.addEventListener("beforeunload", saveGame);
 window.addEventListener("resize", updateSize);
 
